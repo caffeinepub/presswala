@@ -1,44 +1,29 @@
 # PressWala
 
 ## Current State
-The app has four role-based panels:
-- **Customer** (`/customer`) — place orders, track deliveries
-- **Partner** (`/partner`) — accept orders, update status, view earnings
-- **Shop Owner** (`/owner/dashboard`, `/owner/register`) — manage shop
-- **Admin** (`/admin` and sub-routes) — full platform control
+The app has a LandingPage that shows a full-screen spinner while waiting for:
+1. Internet Identity initialization (`isInitializing`)
+2. User profile fetch (`profileLoading`)
+3. Admin check (`adminLoading`) — this fires a separate backend call with retry and staleTime, causing extra delay
 
-The `RoleSelectModal` shows 4 roles: Customer, Partner, Shop Owner, Admin.
-The `AppRole` type includes `'partner'`.
-`LandingPage.tsx` has partner redirect logic.
-`App.tsx` registers a `/partner` route using `PartnerPage`.
-Partner-specific components: `PartnerPage.tsx`, `PartnerDashboard.tsx`, `PartnerEarnings.tsx`, `PartnerBottomNav.tsx`, `PartnerOrderCard.tsx`.
+The `adminLoading` wait is unnecessary because the admin check is not needed to decide what to show on the landing page. The role selection modal and profile setup modal only need the profile result, not admin status.
 
 ## Requested Changes (Diff)
 
 ### Add
-- Nothing new to add.
+- Nothing new
 
 ### Modify
-- `RoleSelectModal.tsx` — remove the Partner role option from the grid (keep Customer, Shop Owner, Admin).
-- `App.tsx` — remove `partnerRoute` and all partner imports.
-- `LandingPage.tsx` — remove `partner` branch from `handleRoleSelect` and `useEffect` redirect logic.
-- `roleStorage.ts` — remove `'partner'` from `AppRole` type union.
+- `LandingPage.tsx`: Remove `adminLoading` from the loading gate. Only wait for `isInitializing` and `profileLoading` before rendering. The admin check still runs in the background but no longer blocks the UI.
+- `useIsCallerAdmin` in `useQueries.ts`: Reduce `retry` from 1 to 0 and reduce `staleTime` from 60000ms to 10000ms to speed up when it is needed.
 
 ### Remove
-- `src/pages/PartnerPage.tsx`
-- `src/components/PartnerDashboard.tsx`
-- `src/components/PartnerEarnings.tsx`
-- `src/components/PartnerBottomNav.tsx`
-- `src/components/PartnerOrderCard.tsx`
+- Nothing removed
 
 ## Implementation Plan
-1. Delete the 5 partner component/page files.
-2. Remove partner import and route from `App.tsx`.
-3. Remove partner role from `RoleSelectModal.tsx` roles array.
-4. Remove partner branch from `LandingPage.tsx` handleRoleSelect and useEffect.
-5. Remove `'partner'` from `AppRole` type in `roleStorage.ts`.
-6. Typecheck and build to confirm no errors.
+1. In `LandingPage.tsx`, remove `adminLoading` from the loading condition on line 57.
+2. In `useQueries.ts`, set `retry: 0` and `staleTime: 10000` for `useIsCallerAdmin`.
 
 ## UX Notes
-- The role selection modal will now show 3 roles in a grid: Customer, Shop Owner, Admin.
-- All other panels (Customer, Shop Owner, Admin) remain completely unchanged.
+- Users will see the hero banner or role modal faster, without waiting for the admin check.
+- Admin check still resolves in background — navigation to /admin still works via the role modal.

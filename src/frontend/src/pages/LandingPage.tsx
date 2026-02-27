@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile, useIsCallerAdmin } from '../hooks/useQueries';
+import { useGetCallerUserProfile } from '../hooks/useQueries';
 import { getStoredAppRole } from '../lib/roleStorage';
 import HeroBanner from '../components/HeroBanner';
 import ProfileSetupModal from '../components/ProfileSetupModal';
@@ -15,7 +15,6 @@ export default function LandingPage() {
   const isAuthenticated = !!identity;
 
   const { data: profile, isLoading: profileLoading, isFetched: profileFetched } = useGetCallerUserProfile();
-  const { isLoading: adminLoading } = useIsCallerAdmin();
 
   const storedRole = getStoredAppRole();
 
@@ -36,7 +35,7 @@ export default function LandingPage() {
   };
 
   useEffect(() => {
-    if (!isAuthenticated || profileLoading || !profileFetched || adminLoading) return;
+    if (!isAuthenticated || profileLoading || !profileFetched) return;
 
     if (profile === null) return; // show profile setup
 
@@ -52,9 +51,9 @@ export default function LandingPage() {
       }
     }
     // If no storedRole, show the role select modal (works for both regular users and admins)
-  }, [isAuthenticated, profile, profileFetched, profileLoading, adminLoading, storedRole, navigate]);
+  }, [isAuthenticated, profile, profileFetched, profileLoading, storedRole, navigate]);
 
-  if (isInitializing || (isAuthenticated && (profileLoading || adminLoading))) {
+  if (isInitializing || (isAuthenticated && profileLoading)) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">

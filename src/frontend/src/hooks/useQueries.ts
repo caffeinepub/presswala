@@ -94,9 +94,8 @@ export function useIsCallerAdmin() {
     // 2. II is not initializing (avoid firing with stale anonymous actor)
     // 3. User is authenticated via Internet Identity
     enabled: !!actor && !actorFetching && !isInitializing && isAuthenticated,
-    retry: 1,
-    staleTime: 60000,
-    retryDelay: 1000,
+    retry: 0,
+    staleTime: 10000,
   });
 
   // isLoading: true while II is initializing, actor is fetching, or query is in initial load

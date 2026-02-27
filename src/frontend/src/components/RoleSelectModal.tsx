@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { ShoppingBag, Bike, Store, ShieldCheck, Loader2 } from 'lucide-react';
+import { ShoppingBag, Store, ShieldCheck, Loader2 } from 'lucide-react';
 import { type AppRole, setStoredAppRole } from '../lib/roleStorage';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useState } from 'react';
@@ -42,7 +42,6 @@ export default function RoleSelectModal({ open, onSelect }: RoleSelectModalProps
 
   const roles: { role: AppRole; icon: React.ElementType; label: string; desc: string }[] = [
     { role: 'customer', icon: ShoppingBag, label: 'Customer', desc: 'Place & track orders' },
-    { role: 'partner', icon: Bike, label: 'Partner', desc: 'Deliver & earn' },
     { role: 'owner', icon: Store, label: 'Shop Owner', desc: 'Manage your shop' },
     { role: 'admin', icon: ShieldCheck, label: 'Admin', desc: 'Manage platform' },
   ];
@@ -57,7 +56,7 @@ export default function RoleSelectModal({ open, onSelect }: RoleSelectModalProps
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-3 mt-2">
+        <div className="grid grid-cols-3 gap-3 mt-2">
           {roles.map(({ role, icon: Icon, label, desc }) => {
             const isAdminOption = role === 'admin';
             const isDisabled = isLoggingIn || adminLoggingIn;

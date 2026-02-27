@@ -26,8 +26,6 @@ export default function LandingPage() {
   const handleRoleSelect = (role: AppRole) => {
     if (role === 'customer') {
       navigate({ to: '/customer' });
-    } else if (role === 'partner') {
-      navigate({ to: '/partner' });
     } else if (role === 'owner') {
       navigate({ to: '/owner/dashboard' });
     } else if (role === 'admin') {
@@ -46,8 +44,6 @@ export default function LandingPage() {
     // Do NOT auto-redirect to /admin just because isAdmin is true — let the user choose
     if (storedRole === 'customer') {
       navigate({ to: '/customer' });
-    } else if (storedRole === 'partner') {
-      navigate({ to: '/partner' });
     } else if (storedRole === 'owner') {
       navigate({ to: '/owner/dashboard' });
     } else if (storedRole === 'admin') {

@@ -7,7 +7,6 @@ import LandingPage from './pages/LandingPage';
 import CustomerPage from './pages/CustomerPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderDetailPage from './pages/OrderDetailPage';
-import PartnerPage from './pages/PartnerPage';
 import AdminPage from './pages/AdminPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
 import AdminUsersPage from './pages/AdminUsersPage';
@@ -74,12 +73,6 @@ const orderDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/customer/orders/$orderId',
   component: OrderDetailPage,
-});
-
-const partnerRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/partner',
-  component: PartnerPage,
 });
 
 const adminRoute = createRoute({
@@ -178,7 +171,6 @@ const routeTree = rootRoute.addChildren([
   customerRoute,
   placeOrderRoute,
   orderDetailRoute,
-  partnerRoute,
   adminRoute,
   adminOrdersRoute,
   adminUsersRoute,
